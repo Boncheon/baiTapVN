@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn Cách Tính</title>
+</head>
+<body>
+    <h2>Chọn Cách Tính</h2>
+
+    <form id="calculationForm">
+        <label for="soThuNhat">Số thứ nhất (n):</label>
+        <input type="number" id="soThuNhat" required><br><br>
+
+        <label for="soThuHai">Số thứ hai (chỉ dùng cho tìm UCLN):</label>
+        <input type="number" id="soThuHai"><br><br>
+
+        <!-- Tùy chọn tính toán -->
+        <label>
+            <input type="radio" name="tinhToan" value="tongTatCa" checked>
+            Tính tổng tất cả các số từ 1 đến n
+        </label><br>
+        <label>
+            <input type="radio" name="tinhToan" value="tongChan">
+            Tính tổng các số chẵn từ 1 đến n
+        </label><br>
+        <label>
+            <input type="radio" name="tinhToan" value="tongLe">
+            Tính tổng các số lẻ từ 1 đến n
+        </label><br>
+        <label>
+            <input type="radio" name="tinhToan" value="kiemTraNguyenTo">
+            Kiểm tra số nguyên tố
+        </label><br>
+        <label>
+            <input type="radio" name="tinhToan" value="timUCLN">
+            Tìm UCLN của hai số
+        </label><br><br>
+
+        <button type="submit">Tính toán</button>
+    </form>
+
+    <p id="result"></p>
+
+    <script>
+        // Tính tổng tất cả các số từ 1 đến n
+        function tinhTong(n) {
+            let tong = 0;
+            for (let i = 1; i <= n; i++) {
+                tong += i;
+            }
+            return tong;
+        }
+
+        // Tính tổng các số chẵn từ 1 đến n
+        function tinhTongChan(n) {
+            let tong = 0;
+            for (let i = 2; i <= n; i += 2) {
+                tong += i;
+            }
+            return tong;
+        }
+
+        // Tính tổng các số lẻ từ 1 đến n
+        function tinhTongLe(n) {
+            let tong = 0;
+            for (let i = 1; i <= n; i += 2) {
+                tong += i;
+            }
+            return tong;
+        }
+
+        // Kiểm tra số nguyên tố
+        function kiemTraNguyenTo(n) {
+            if (n <= 1) return false;
+            for (let i = 2; i <= Math.sqrt(n); i++) {
+                if (n % i === 0) return false;
+            }
+            return true;
+        }
+
+        // Tìm UCLN của hai số a và b
+        function timUCLN(a, b) {
+            while (b !== 0) {
+                let temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        document.getElementById('calculationForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Ngăn form reload trang
+
+            const soThuNhat = parseInt(document.getElementById('soThuNhat').value);
+            const soThuHai = parseInt(document.getElementById('soThuHai').value);
+            const tinhToan = document.querySelector('input[name="tinhToan"]:checked').value;
+            let ketQua;
+
+            // Xử lý tính toán dựa trên lựa chọn
+            if (tinhToan === "tongTatCa") {
+                ketQua = "Tổng tất cả các số từ 1 đến " + soThuNhat + " là: " + tinhTong(soThuNhat);
+            } else if (tinhToan === "tongChan") {
+                ketQua = "Tổng các số chẵn từ 1 đến " + soThuNhat + " là: " + tinhTongChan(soThuNhat);
+            } else if (tinhToan === "tongLe") {
+                ketQua = "Tổng các số lẻ từ 1 đến " + soThuNhat + " là: " + tinhTongLe(soThuNhat);
+            } else if (tinhToan === "kiemTraNguyenTo") {
+                ketQua = soThuNhat + (kiemTraNguyenTo(soThuNhat) ? " là số nguyên tố." : " không phải là số nguyên tố.");
+            } else if (tinhToan === "timUCLN") {
+                if (isNaN(soThuHai) || soThuHai === 0) {
+                    ketQua = "Vui lòng nhập số thứ hai hợp lệ cho phép tính UCLN.";
+                } else {
+                    ketQua = "UCLN của " + soThuNhat + " và " + soThuHai + " là: " + timUCLN(soThuNhat, soThuHai);
+                }
+            }
+
+            // Hiển thị kết quả
+            document.getElementById('result').textContent = ketQua;
+        });
+    </script>
+</body>
+</html>
